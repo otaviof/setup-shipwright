@@ -19,6 +19,6 @@ runs:
     - shell: bash
       run: ./probe.sh
     - shell: bash
-      run: TEKTON_VERSION="${{ inputs.tekton-version }}" ./install-tekton.sh
+      run: ./install-tekton.sh "${{ inputs.tekton-version }}"
     - shell: bash
-      run: SHIPWRIGHT_VERSION="${{ inputs.shipwright-version }}" ./install-shipwright.sh
+      run: ./install-shipwright.sh "${{ inputs.shipwright-version }}"

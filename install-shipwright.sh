@@ -5,11 +5,11 @@
 
 set -eu
 
-SHIPWRIGHT_VERSION="${SHIPWRIGHT_VERSION:-v0.9.0}"
-DEPLOYMENT_TIMEOUT="${DEPLOYMENT_TIMEOUT:-3m}"
+SHIPWRIGHT_VERSION="${1:-v0.9.0}"
+DEPLOYMENT_TIMEOUT="${2:-3m}"
 
-SHIPWRIGHT_HOST="github.com"
-SHIPWRIGHT_HOST_PATH="shipwright-io/build/releases/download"
+readonly SHIPWRIGHT_HOST="github.com"
+readonly SHIPWRIGHT_HOST_PATH="shipwright-io/build/releases/download"
 
 echo "# Deploying Shipwright Controller '${SHIPWRIGHT_VERSION}'"
 

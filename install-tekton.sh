@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 #
-# Installs Tekton Pipelines.
+# Installs Tekton Pipelines using the first argument as target version.
 #
 
 set -eu
 
-TEKTON_VERSION="${TEKTON_VERSION:-v0.34.1}"
+TEKTON_VERSION="${1:-v0.34.1}"
 
-TEKTON_HOST="github.com"
-TEKTON_HOST_PATH="tektoncd/pipeline/releases/download"
+readonly TEKTON_HOST="github.com"
+readonly TEKTON_HOST_PATH="tektoncd/pipeline/releases/download"
 
 function rollout_status () {
 	kubectl --namespace="tekton-pipelines" rollout status deployment ${1} --timeout=1m

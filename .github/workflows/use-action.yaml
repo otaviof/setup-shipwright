@@ -23,4 +23,5 @@ jobs:
           cluster_name: kind
           wait: 120s
       - uses: azure/setup-kubectl@v1
+
       - uses: otaviof/setup-shipwright@main
