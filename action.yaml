@@ -1,0 +1,24 @@
+---
+name: Setup Shipwright
+description: Installs Shipwright Build Controller and dependencies
+branding:
+  icon: box
+  color: green
+inputs:
+  tekton-version:
+    description: Tekton Pipelines version
+    required: false
+    default: v0.34.1
+  shipwright-version:
+    description: Shipwright Build Controller version
+    required: false
+    default: v0.9.0
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: ./probe.sh
+    - shell: bash
+      run: TEKTON_VERSION="${{ inputs.tekton-version }}" ./install-tekton.sh
+    - shell: bash
+      run: SHIPWRIGHT_VERSION="${{ inputs.shipwright-version }}" ./install-shipwright.sh
