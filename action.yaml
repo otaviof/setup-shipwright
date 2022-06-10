@@ -13,12 +13,29 @@ inputs:
     description: Shipwright Build Controller version
     required: false
     default: v0.9.0
+  setup-registry:
+    description: Setup a Container Registry
+    required: false
+    default: "false"
 runs:
   using: composite
   steps:
+    # pre-flight checks, making sure the dependencies needed for the upcoming steps are available
     - shell: bash
-      run: ./probe.sh
+      run: |
+        ./probe.sh
+    # deploying the container registry
     - shell: bash
-      run: ./install-tekton.sh "${{ inputs.tekton-version }}"
+      if: ${{ inputs.setup-registry == 'true' }}
+      run: |
+        ./install-registry.sh
+    # deploying tekton operator and waiting for it to be available
     - shell: bash
-      run: ./install-shipwright.sh "${{ inputs.shipwright-version }}"
+      run: |
+        TEKTON_VERSION="${{ inputs.tekton-version }}" \
+        ./install-tekton.sh
+    # deploying shipwright build controller, waiting for the instance to be available
+    - shell: bash
+      run: |
+        SHIPWRIGHT_VERSION="${{ inputs.shipwright-version }}" \
+        ./install-shipwright.sh 

@@ -5,7 +5,12 @@
 
 set -eu
 
-TEKTON_VERSION="${1:-v0.34.1}"
+TEKTON_VERSION="${TEKTON_VERSION:-}"
+
+if [ -z "${TEKTON_VERSION}" ] ; then 
+	echo "TEKTON_VERSION must be informed!" >&2
+	exit 1
+fi
 
 readonly TEKTON_HOST="github.com"
 readonly TEKTON_HOST_PATH="tektoncd/pipeline/releases/download"

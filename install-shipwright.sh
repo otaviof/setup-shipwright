@@ -5,8 +5,13 @@
 
 set -eu
 
-SHIPWRIGHT_VERSION="${1:-v0.9.0}"
-DEPLOYMENT_TIMEOUT="${2:-3m}"
+SHIPWRIGHT_VERSION="${SHIPWRIGHT_VERSION:-}"
+DEPLOYMENT_TIMEOUT="${DEPLOYMENT_TIMEOUT:-3m}"
+
+if [ -z "${SHIPWRIGHT_VERSION}" ] ; then 
+	echo "SHIPWRIGHT_VERSION must be informed!" >&2
+	exit 1
+fi
 
 readonly SHIPWRIGHT_HOST="github.com"
 readonly SHIPWRIGHT_HOST_PATH="shipwright-io/build/releases/download"

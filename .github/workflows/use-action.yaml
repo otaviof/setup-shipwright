@@ -22,6 +22,13 @@ jobs:
           version: v0.14.0
           cluster_name: kind
           wait: 120s
-      - uses: azure/setup-kubectl@v1
 
-      - uses: otaviof/setup-shipwright@main
+      # self loading the action.yaml definitions, it makes it possible to run the action against the
+      # local instance and later on assert the action changes
+      - uses: ./
+        with:
+          setup-registry: true
+
+      - shell: bash
+        run: |
+          ./assert.sh
