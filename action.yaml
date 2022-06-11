@@ -2,8 +2,8 @@
 name: Setup Shipwright
 description: Installs Shipwright Build Controller and dependencies
 branding:
-  icon: box
-  color: green
+  color: blue
+  icon: anchor 
 inputs:
   tekton-version:
     description: Tekton Pipelines version
@@ -14,7 +14,7 @@ inputs:
     required: false
     default: v0.10.0
   setup-registry:
-    description: Setup a Container Registry
+    description: Enable this flag to deploy a Container Registry
     required: false
     default: "false"
 runs:
@@ -24,17 +24,18 @@ runs:
     - shell: bash
       run: |
         ./probe.sh
-    # deploying the container registry
+    # deploying the container registry when input flag is set, waiting for the deployment to reach
+    # ready status before proceeding
     - shell: bash
       if: ${{ inputs.setup-registry == 'true' }}
       run: |
         ./install-registry.sh
-    # deploying tekton operator and waiting for it to be available
+    # deploying tekton pipline controller and dependencies, waiting for it to reach ready status
     - shell: bash
       run: |
         TEKTON_VERSION="${{ inputs.tekton-version }}" \
         ./install-tekton.sh
-    # deploying shipwright build controller, waiting for the instance to be available
+    # deploying shipwright build controller, waiting for the instance to be reach ready status
     - shell: bash
       run: |
         SHIPWRIGHT_VERSION="${{ inputs.shipwright-version }}" \
