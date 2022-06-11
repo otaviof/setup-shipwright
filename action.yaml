@@ -40,3 +40,8 @@ runs:
       run: |
         SHIPWRIGHT_VERSION="${{ inputs.shipwright-version }}" \
         ./install-shipwright.sh 
+    # downloading and installing the CLI executable
+    - shell: bash
+      run: |
+        SHIPWRIGHT_VERSION="${{ inputs.shipwright-version }}" \
+        ./install-cli.sh 
