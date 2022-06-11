@@ -46,6 +46,7 @@ jobs:
         with:
           tekton-version: v0.34.1
           shipwright-version: v0.9.0
+          setup-registry: true
 ```
 
 - `tekton-version`: Tekton Pipelines controller version
