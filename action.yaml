@@ -23,25 +23,25 @@ runs:
     # pre-flight checks, making sure the dependencies needed for the upcoming steps are available
     - shell: bash
       run: |
-        ./probe.sh
+        ${{ github.action_path }}/probe.sh
     # deploying the container registry when input flag is set, waiting for the deployment to reach
     # ready status before proceeding
     - shell: bash
       if: ${{ inputs.setup-registry == 'true' }}
       run: |
-        ./install-registry.sh
+        ${{ github.action_path }}/install-registry.sh
     # deploying tekton pipline controller and dependencies, waiting for it to reach ready status
     - shell: bash
       run: |
         TEKTON_VERSION="${{ inputs.tekton-version }}" \
-        ./install-tekton.sh
+        ${{ github.action_path }}/install-tekton.sh
     # deploying shipwright build controller, waiting for the instance to be reach ready status
     - shell: bash
       run: |
         SHIPWRIGHT_VERSION="${{ inputs.shipwright-version }}" \
-        ./install-shipwright.sh 
+        ${{ github.action_path }}/install-shipwright.sh 
     # downloading and installing the CLI executable
     - shell: bash
       run: |
         SHIPWRIGHT_VERSION="${{ inputs.shipwright-version }}" \
-        ./install-cli.sh 
+        ${{ github.action_path }}/install-cli.sh 
