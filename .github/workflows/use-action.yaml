@@ -16,19 +16,25 @@ jobs:
     name: use-action
     runs-on: ubuntu-latest
     steps:
+      # checking out the project code on the current workspace
       - uses: actions/checkout@v3
+      # preparing the Kubernetes cluster# (KinD) and installing kubectl
       - uses: helm/kind-action@v1.2.0
         with:
           version: v0.14.0
           cluster_name: kind
           wait: 120s
+      # intalling golang and ko, both dependencies of this action
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.18'
+      - uses: imjasonh/setup-ko@v0.4
 
       # self loading the action.yaml definitions, it makes it possible to run the action against the
       # local instance and later on assert the action changes
       - uses: ./
-        with:
-          setup-registry: true
 
+      # assert the changes performed by this action
       - shell: bash
         run: |
           ./assert.sh

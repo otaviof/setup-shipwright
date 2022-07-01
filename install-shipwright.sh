@@ -1,32 +1,28 @@
 #!/usr/bin/env bash
 #
-# Installs Shipwright Build Controller and Build-Strategies.
+# Installs Shipwright Build Controller and Build-Strategies using the Makefile target.
 #
 
-set -eu
+set -eu -o pipefail
 
-SHIPWRIGHT_VERSION="${SHIPWRIGHT_VERSION:-}"
+GITHUB_WORKSPACE="${GITHUB_WORKSPACE:-.}"
+CLONE_DIR="${GITHUB_WORKSPACE}/src/build"
+
 DEPLOYMENT_TIMEOUT="${DEPLOYMENT_TIMEOUT:-3m}"
 
-if [ -z "${SHIPWRIGHT_VERSION}" ] ; then 
-	echo "SHIPWRIGHT_VERSION must be informed!" >&2
+function fail () {
+	echo "ERROR: ${*}" >&2
 	exit 1
-fi
+}
 
-readonly SHIPWRIGHT_HOST="github.com"
-readonly SHIPWRIGHT_HOST_PATH="shipwright-io/build/releases/download"
+cd "${CLONE_DIR}" || fail "Directory '${CLONE_DIR}' does not exit!"
 
-echo "# Deploying Shipwright Controller '${SHIPWRIGHT_VERSION}'"
-
-if [[ ${SHIPWRIGHT_VERSION} == nightly-* ]]; then
-	kubectl apply -f "https://${SHIPWRIGHT_HOST}/${SHIPWRIGHT_HOST_PATH}/nightly/${SHIPWRIGHT_VERSION}.yaml"
-else
-	kubectl apply -f "https://${SHIPWRIGHT_HOST}/${SHIPWRIGHT_HOST_PATH}/${SHIPWRIGHT_VERSION}/release.yaml"
-fi
+echo "# Deploying Shipwright Controller..."
+make install-controller-kind
 
 echo "# Waiting for Build Controller rollout..."
-kubectl --namespace="shipwright-build" rollout status deployment shipwright-build-controller --timeout="${DEPLOYMENT_TIMEOUT}"
+kubectl --namespace="shipwright-build" --timeout="${DEPLOYMENT_TIMEOUT}" \
+	rollout status deployment shipwright-build-controller
 
 echo "# Installing upstream Build-Strategies..."
-
-kubectl apply -f "https://${SHIPWRIGHT_HOST}/${SHIPWRIGHT_HOST_PATH}/nightly/default_strategies.yaml"
+make install-strategies

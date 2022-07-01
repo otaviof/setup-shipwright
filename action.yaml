@@ -1,21 +1,25 @@
 ---
-name: Setup Shipwright
-description: Installs Shipwright Build Controller and dependencies
+name: Shipwright Setup (CI)
+description: Installs Shipwright Build Controller, CLI and Container Registry
 branding:
   color: blue
   icon: anchor 
 inputs:
   tekton-version:
-    description: Tekton Pipelines version
+    description: Tekton Pipelines release version
     required: false
-    default: v0.34.1
-  shipwright-version:
-    description: Shipwright Build Controller version
+    default: v0.37.0
+  shipwright-ref:
+    description: Shipwright Build Controller repository reference, tag or SHA
+    required: false
+    default: v0.10.0
+  cli-ref:
+    description: Shipwright CLI repository reference, tag or SHA
     required: false
     default: v0.10.0
   setup-registry:
-    description: Enable this flag to deploy a Container Registry
-    required: false
+    description: When enabled, the action deploys a Container Registry instance
+    required: true
     default: "false"
 runs:
   using: composite
@@ -24,24 +28,37 @@ runs:
     - shell: bash
       run: |
         ${{ github.action_path }}/probe.sh
+
     # deploying the container registry when input flag is set, waiting for the deployment to reach
     # ready status before proceeding
     - shell: bash
       if: ${{ inputs.setup-registry == 'true' }}
       run: |
         ${{ github.action_path }}/install-registry.sh
+
     # deploying tekton pipline controller and dependencies, waiting for it to reach ready status
     - shell: bash
       run: |
         TEKTON_VERSION="${{ inputs.tekton-version }}" \
         ${{ github.action_path }}/install-tekton.sh
-    # deploying shipwright build controller, waiting for the instance to be reach ready status
+
+    # checking out the build controller project locally to perform the rollout and inspection of the
+    # controller instance in the cluster
+    - uses: actions/checkout@v3
+      with:
+        repository: shipwright-io/build
+        ref: ${{ inputs.shipwright-ref }}
+        path: src/build
     - shell: bash
       run: |
-        SHIPWRIGHT_VERSION="${{ inputs.shipwright-version }}" \
         ${{ github.action_path }}/install-shipwright.sh 
+
     # downloading and installing the CLI executable
+    - uses: actions/checkout@v3
+      with:
+        repository: shipwright-io/cli
+        ref: ${{ inputs.cli-ref }}
+        path: src/build
     - shell: bash
       run: |
-        SHIPWRIGHT_VERSION="${{ inputs.shipwright-version }}" \
-        ${{ github.action_path }}/install-cli.sh 
+        ${{ github.action_path }}/install-cli.sh
