@@ -24,14 +24,14 @@ jobs:
           version: v0.14.0
           cluster_name: kind
           wait: 120s
-      # intalling golang and ko, both dependencies of this action
+      # installing go and ko, both action dependencies
       - uses: actions/setup-go@v3
         with:
           go-version: '1.18'
       - uses: imjasonh/setup-ko@v0.4
 
-      # self loading the action.yaml definitions, it makes it possible to run the action against the
-      # local instance and later on assert the action changes
+      # self loading the action.yaml definitions, making possible to run the action defined on this
+      # project directly
       - uses: ./
 
       # assert the changes performed by this action
