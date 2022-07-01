@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 #
-# Deploys a Container Registry instance against the informed namespace, and waits for the deployment
-# reach running status.
+# Deploys a Container Registry instance, waits for the deployment reach running status.
 #
 
 set -eu -o pipefail
 
-REGISTRY_NAMESPACE="${REGISTRY_NAMESPACE:-registry}"
-DEPLOYMENT_TIMEOUT="${DEPLOYMENT_TIMEOUT:-3m}"
+source common.sh
 
 echo "# Deploying a Container Registry on '${REGISTRY_NAMESPACE}' namespace..."
 cat <<EOS |kubectl apply -o yaml -f -
@@ -73,6 +71,4 @@ EOS
 
 
 echo "# Waiting for Registry rollout..."
-kubectl --namespace="${REGISTRY_NAMESPACE}" \
-	rollout status deployment registry \
-		--timeout=${DEPLOYMENT_TIMEOUT}
+rollout_status "${REGISTRY_NAMESPACE}" "registry"

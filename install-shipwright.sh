@@ -5,15 +5,9 @@
 
 set -eu -o pipefail
 
-GITHUB_WORKSPACE="${GITHUB_WORKSPACE:-.}"
+source common.sh
+
 CLONE_DIR="${GITHUB_WORKSPACE}/src/build"
-
-DEPLOYMENT_TIMEOUT="${DEPLOYMENT_TIMEOUT:-3m}"
-
-function fail () {
-	echo "ERROR: ${*}" >&2
-	exit 1
-}
 
 cd "${CLONE_DIR}" || fail "Directory '${CLONE_DIR}' does not exit!"
 
