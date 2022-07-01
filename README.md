@@ -1,6 +1,8 @@
-# GitHub Action to Install [Shipwright][shpBuild]
+# GitHub Action to Install [Shipwright][shpBuild] (`v1`)
 
 [![Build][useActionBadgeSVG]](https://github.com/imjasonh/setup-ko/actions/workflows/use-action.yaml)
+
+Deploys Shipwright Build Controller, CLI and a Container Registry instance in order to perform continuous integration (CI) tests against those.
 
 # Usage
 
@@ -22,7 +24,7 @@ jobs:
       - uses: imjasonh/setup-ko@v0.4
 
       # setting up Shipwright Build Controller, CLI and a Container Registry
-      - uses: otaviof/setup-shipwright@main
+      - uses: otaviof/setup-shipwright@v1
 ```
 
 # Inputs
@@ -33,7 +35,7 @@ Example usage with inputs carrying default values:
 jobs:
   use-action:
     steps:
-      - uses: otaviof/setup-shipwright@main
+      - uses: otaviof/setup-shipwright@v1
         with:
           tekton-version: v0.37.0
           shipwright-ref: v0.10.0
@@ -46,18 +48,21 @@ jobs:
 - `cli-ref`: [Shipwright CLI][shpCLI] repository tag or SHA
 - `setup-registry`: Setup a Container Registry instance, `true` or `false`
 
+The Shipwright components Build Controller and CLI can be deployed using a specific commit SHA or tag, the repository employed are the defaults for those projects.
+
 # Contributing
 
-To run this action locally, you can use `act` as the following example:
+To run this action locally, you can use [`act`][nektosAct] as the following example:
 
 ```bash
 act --secret="GITHUB_TOKEN=${GITHUB_TOKEN}"
 ```
 
-Note the `GITHUB_TOKEN` secret informed, which is needed in order to clone GitHub repositories.
+Note the `GITHUB_TOKEN` secret informed, a read-only type of authorization token is needed to clone additional GitHub repositories.
 
 [shpBuild]: https://github.com/shipwright-io/build
 [shpCLI]: https://github.com/shipwright-io/cli
 [useAction]: https://github.com/otaviof/setup-shipwright/actions/workflows/use-action.yaml
 [useActionBadgeSVG]:  https://github.com/otaviof/setup-shipwright/actions/workflows/use-action.yaml/badge.svg
 [tektonPipeline]: https://github.com/tektoncd/pipeline
+[nektosAct]: https://github.com/nektos/act

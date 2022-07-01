@@ -20,7 +20,7 @@ inputs:
   setup-registry:
     description: When enabled, the action deploys a Container Registry instance
     required: true
-    default: "false"
+    default: "true"
 runs:
   using: composite
   steps:
