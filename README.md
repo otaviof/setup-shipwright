@@ -1,12 +1,14 @@
-# GitHub Action to Install [Shipwright][shpBuild] (`v1`)
+# Setup [Shipwright Build][shpBuild] and [CLI][shpCLI] (`v1`)
 
 [![Build][useActionBadgeSVG]](https://github.com/imjasonh/setup-ko/actions/workflows/use-action.yaml)
 
-Deploys Shipwright Build Controller, CLI and a Container Registry instance in order to perform continuous integration (CI) tests against those.
+Deploys [Shipwright Build Controller][shpBuild], [CLI][shpCLI] and optionally a Container Registry instance, in order to perform continuous integration (CI) tests against those.
 
 # Usage
 
-Example usage:
+To deploy Shipwright components you need `go` and `ko` available in the path, and also, a Kubernetes instance needs to be available through `kubectl`.
+
+Please consider the following usage example:
 
 ```yml
 jobs:
@@ -46,7 +48,7 @@ jobs:
 - `tekton-version`: [Tekton Pipeline][tektonPipeline] release version 
 - `shipwright-ref`: [Shipwright Build Controller][shpBuild] repository tag or SHA
 - `cli-ref`: [Shipwright CLI][shpCLI] repository tag or SHA
-- `setup-registry`: Setup a Container Registry instance, `true` or `false`
+- `setup-registry`: Setup a Container Registry instance, `true` or `false` enabled by default
 
 The Shipwright components Build Controller and CLI can be deployed using a specific commit SHA or tag, the repository employed are the defaults for those projects.
 
