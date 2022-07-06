@@ -2,19 +2,16 @@
 
 [![Build][useActionBadgeSVG]](https://github.com/imjasonh/setup-ko/actions/workflows/use-action.yaml)
 
-Deploys [Shipwright Build Controller][shpBuild], [CLI][shpCLI] and optionally a Container Registry instance, in order to perform continuous integration (CI) tests against those.
+Deploys [Shipwright Build Controller][shpBuild], [CLI][shpCLI] and optionally a Container Registry instance, to perform continuous integration (CI) tests on the [`shipwright-io` projects][shpGitHubOrg].
 
 # Usage
 
-To deploy Shipwright components you need `go` and `ko` available in the path, and also, a Kubernetes instance needs to be available through `kubectl`.
-
-Please consider the following usage example:
+This action needs `go` and `ko` and a Kubernetes instance (available through `kubectl`), make sure those items are set beforehand. The following snippet shows the complete usage, please consider:
 
 ```yml
 jobs:
-  install-shipwright:
-    name: Install Shipwright Build Controller and CLI
-    runs-on: ubuntu-latest
+  setup-shipwright:
+    name: Shipwright
     steps:
       # using KinD to provide the Kubernetes instance and kubectl
       - uses: helm/kind-action@v1.2.0
@@ -29,9 +26,9 @@ jobs:
       - uses: otaviof/setup-shipwright@v1
 ```
 
-# Inputs
+## Inputs
 
-Example usage with inputs carrying default values:
+Example usage using defaults:
 
 ```yml
 jobs:
@@ -45,12 +42,29 @@ jobs:
           setup-registry: true
 ```
 
-- `tekton-version`: [Tekton Pipeline][tektonPipeline] release version 
-- `shipwright-ref`: [Shipwright Build Controller][shpBuild] repository tag or SHA
-- `cli-ref`: [Shipwright CLI][shpCLI] repository tag or SHA
-- `setup-registry`: Setup a Container Registry instance, `true` or `false` enabled by default
+The inputs are described below:
 
-The Shipwright components Build Controller and CLI can be deployed using a specific commit SHA or tag, the repository employed are the defaults for those projects.
+| Input             | Default   | Description                                                   |
+|-------------------|-----------|---------------------------------------------------------------|
+| `tekton-version`  | `v0.37.0` | [Tekton Pipeline][tektonPipeline] release version             |
+| `shipwright-ref`  | `v0.10.0` | [Shipwright Build Controller][shpBuild] repository tag or SHA |
+| `cli-ref`         | `v0.10.0` | [Shipwright CLI][shpCLI] repository tag or SHA                |
+| `setup-registry`  | `true`    | Setup a Container Registry instance (`true` or `false`)       |
+
+The Shipwright components [Build Controller][shpBuild] and [CLI][shpCLI] can be deployed using a specific commit SHA or tag.
+
+## Inside Shipwright Organization
+
+When using this action inside the [shipwright-io organization][shpGitHubOrg], adjust the inputs accordingly with the [current context][ghaEnvVars]. For instance, the [Build Controller][shpBuild] repository shares the current commit digest with the action input:
+
+```yml
+jobs:
+  use-action:
+    steps:
+      - uses: otaviof/setup-shipwright@v1
+        with:
+          shipwright-ref: ${{ env.GITHUB_SHA }}
+```
 
 # Contributing
 
@@ -60,7 +74,7 @@ To run this action locally, you can use [`act`][nektosAct] as the following exam
 act --secret="GITHUB_TOKEN=${GITHUB_TOKEN}"
 ```
 
-Note the `GITHUB_TOKEN` secret informed, a read-only type of authorization token is needed to clone additional GitHub repositories.
+The `GITHUB_TOKEN` is necessary for checking out the upstream repositories in the action workspace, and for this purpose the token only needs read-only permissions on the [`shipwright-io` organization][shpGitHubOrg]. The token is provided by default during GitHub Action execution inside GitHub.
 
 ## Troubleshooting
 
@@ -83,10 +97,12 @@ kubectl --namespace=shipwright-build get pods
 kubectl --namespace=shipwright-build logs --follow shipwright-build-controller-xxxxxxx
 ```
 
+[ghaEnvVars]: https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
+[kind]: https://kind.sigs.k8s.io/
+[nektosAct]: https://github.com/nektos/act
 [shpBuild]: https://github.com/shipwright-io/build
 [shpCLI]: https://github.com/shipwright-io/cli
+[shpGitHubOrg]: https://github.com/shipwright-io/build
+[tektonPipeline]: https://github.com/tektoncd/pipeline
 [useAction]: https://github.com/otaviof/setup-shipwright/actions/workflows/use-action.yaml
 [useActionBadgeSVG]:  https://github.com/otaviof/setup-shipwright/actions/workflows/use-action.yaml/badge.svg
-[tektonPipeline]: https://github.com/tektoncd/pipeline
-[nektosAct]: https://github.com/nektos/act
-[kind]: https://kind.sigs.k8s.io/
