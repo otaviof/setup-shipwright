@@ -6,6 +6,10 @@
 GITHUB_WORKSPACE="${GITHUB_WORKSPACE:-.}"
 # namespace name for the container registry
 REGISTRY_NAMESPACE="${REGISTRY_NAMESPACE:-registry}"
+# namespace name for Tekton Pipeline controller
+readonly TEKTON_NAMESPACE="tekton-pipelines"
+# namespace name for Shipwright Build controller
+readonly SHIPWRIGHT_NAMESPACE="shipwright-build"
 # timeout employed during rollout status and deployments in general
 DEPLOYMENT_TIMEOUT="${DEPLOYMENT_TIMEOUT:-3m}"
 

@@ -15,7 +15,7 @@ echo "# Deploying Shipwright Controller..."
 make install-controller-kind
 
 echo "# Waiting for Build Controller rollout..."
-kubectl --namespace="shipwright-build" --timeout="${DEPLOYMENT_TIMEOUT}" \
+kubectl --namespace="${SHIPWRIGHT_NAMESPACE}" --timeout="${DEPLOYMENT_TIMEOUT}" \
 	rollout status deployment shipwright-build-controller
 
 echo "# Installing upstream Build-Strategies..."

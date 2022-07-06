@@ -23,5 +23,5 @@ kubectl apply -f "https://${TEKTON_HOST}/${TEKTON_HOST_PATH}/${TEKTON_VERSION}/r
 
 echo "# Waiting for Tekton components..."
 
-rollout_status "tekton-pipelines" "tekton-pipelines-controller"
-rollout_status "tekton-pipelines" "tekton-pipelines-webhook"
+rollout_status "${TEKTON_NAMESPACE}" "tekton-pipelines-controller"
+rollout_status "${TEKTON_NAMESPACE}" "tekton-pipelines-webhook"
