@@ -62,9 +62,31 @@ act --secret="GITHUB_TOKEN=${GITHUB_TOKEN}"
 
 Note the `GITHUB_TOKEN` secret informed, a read-only type of authorization token is needed to clone additional GitHub repositories.
 
+## Troubleshooting
+
+This action uses [KinD][kind] to instantiate a temporary Kubernetes and test itself against it, thus if you're using the same setup make sure there are no clusters left behind before running the action again.
+
+```bash
+kind delete cluster
+```
+
+When tests fail, you can use the context provided by KinD to connect on cluster, and then you're free to inspect all the components, logs, events, etc. For instance:
+
+```bash
+kind export kubeconfig
+```
+
+Once you set up the context you are able to inspect, for example, the Build controller logs.
+
+```
+kubectl --namespace=shipwright-build get pods
+kubectl --namespace=shipwright-build logs --follow shipwright-build-controller-xxxxxxx
+```
+
 [shpBuild]: https://github.com/shipwright-io/build
 [shpCLI]: https://github.com/shipwright-io/cli
 [useAction]: https://github.com/otaviof/setup-shipwright/actions/workflows/use-action.yaml
 [useActionBadgeSVG]:  https://github.com/otaviof/setup-shipwright/actions/workflows/use-action.yaml/badge.svg
 [tektonPipeline]: https://github.com/tektoncd/pipeline
 [nektosAct]: https://github.com/nektos/act
+[kind]: https://kind.sigs.k8s.io/
