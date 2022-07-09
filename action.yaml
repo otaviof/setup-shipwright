@@ -26,15 +26,13 @@ runs:
   steps:
     # pre-flight checks, making sure the dependencies needed for the upcoming steps are available
     - shell: bash
-      run: |
-        ${{ github.action_path }}/probe.sh
+      run: ${{ github.action_path }}/probe.sh
 
     # deploying the container registry when input flag is set, waiting for the deployment to reach
     # ready status before proceeding
     - shell: bash
-      if: inputs.setup-registry == 'true'
-      run: |
-        ${{ github.action_path }}/install-registry.sh
+      if: ${{ inputs.setup-registry == 'true' }}
+      run: ${{ github.action_path }}/install-registry.sh
 
     # deploying tekton pipline controller and dependencies, waiting for it to reach ready status
     - shell: bash
@@ -49,10 +47,9 @@ runs:
         repository: shipwright-io/build
         ref: ${{ inputs.shipwright-ref }}
         path: src/build
-      if: github.event.pull_request.head.repo.full_name != github.repository
+      if: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
     - shell: bash
-      run: |
-        ${{ github.action_path }}/install-shipwright.sh 
+      run: ${{ github.action_path }}/install-shipwright.sh 
 
     # checking out the CLI project locally, performing the installation to let it available on PATH
     - uses: actions/checkout@v3
@@ -60,7 +57,6 @@ runs:
         repository: shipwright-io/cli
         ref: ${{ inputs.cli-ref }}
         path: src/cli
-      if: github.event.pull_request.head.repo.full_name != github.repository
+      if: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
     - shell: bash
-      run: |
-        ${{ github.action_path }}/install-cli.sh
+      run: ${{ github.action_path }}/install-cli.sh
