@@ -1,4 +1,4 @@
-# Setup [Shipwright Build][shpBuild] and [CLI][shpCLI] (`v1`)
+# Setup [Shipwright Build][shpBuild] and [CLI][shpCLI] (`v2`)
 
 [![Build][useActionBadgeSVG]][useAction]
 
@@ -23,7 +23,7 @@ jobs:
       - uses: imjasonh/setup-ko@v0.4
 
       # setting up Shipwright Build Controller, CLI and a Container Registry
-      - uses: otaviof/setup-shipwright@v1
+      - uses: otaviof/setup-shipwright@v2
 ```
 
 ## Inputs
@@ -34,7 +34,7 @@ Example usage using defaults:
 jobs:
   use-action:
     steps:
-      - uses: otaviof/setup-shipwright@v1
+      - uses: otaviof/setup-shipwright@v2
         with:
           tekton-version: v0.37.0
           shipwright-ref: v0.10.0
