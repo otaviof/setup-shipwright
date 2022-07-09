@@ -4,6 +4,9 @@
 
 # path to the current workspace
 GITHUB_WORKSPACE="${GITHUB_WORKSPACE:-.}"
+# name of the organization and repository, joined by slash
+GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-}"
+
 # namespace name for the container registry
 REGISTRY_NAMESPACE="${REGISTRY_NAMESPACE:-registry}"
 # namespace name for Tekton Pipeline controller
@@ -37,4 +40,17 @@ function probe_bin_on_path() {
 	if ! type -a ${name} >/dev/null 2>&1; then
 		fail "Can't find '${name}' on \$PATH"
 	fi
+}
+
+# compares the context information shared via the environment to determine if the current repository
+# is the name informed.
+function is_current_repo () {
+	local name="${1}"
+
+	# when the current repository name matches the informed name
+	if [ "${GITHUB_REPOSITORY#*/}" == "${name}" ] ; then
+		return 0
+	fi
+
+	return 1
 }

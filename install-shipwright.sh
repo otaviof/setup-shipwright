@@ -7,16 +7,20 @@ set -eu -o pipefail
 
 source common.sh
 
-CLONE_DIR="${GITHUB_WORKSPACE}/src/build"
+readonly REPO_NAME="build"
+CLONE_DIR="."
+
+if ! is_current_repo "${REPO_NAME}" ; then
+	CLONE_DIR="${GITHUB_WORKSPACE}/src/${REPO_NAME}"
+fi
 
 cd "${CLONE_DIR}" || fail "Directory '${CLONE_DIR}' does not exit!"
 
-echo "# Deploying Shipwright Controller..."
+echo "# Deploying Shipwright Controller (${CLONE_DIR})..."
 make install-controller-kind
 
 echo "# Waiting for Build Controller rollout..."
-kubectl --namespace="${SHIPWRIGHT_NAMESPACE}" --timeout="${DEPLOYMENT_TIMEOUT}" \
-	rollout status deployment shipwright-build-controller
+rollout_status "${SHIPWRIGHT_NAMESPACE}" "shipwright-build-controller"
 
 echo "# Installing upstream Build-Strategies..."
 make install-strategies

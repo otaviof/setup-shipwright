@@ -58,7 +58,7 @@ runs:
       with:
         repository: shipwright-io/cli
         ref: ${{ inputs.cli-ref }}
-        path: src/build
+        path: src/cli
     - shell: bash
       run: |
         ${{ github.action_path }}/install-cli.sh
