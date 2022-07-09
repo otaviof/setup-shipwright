@@ -32,7 +32,7 @@ runs:
     # deploying the container registry when input flag is set, waiting for the deployment to reach
     # ready status before proceeding
     - shell: bash
-      if: ${{ inputs.setup-registry == 'true' }}
+      if: inputs.setup-registry == 'true'
       run: |
         ${{ github.action_path }}/install-registry.sh
 
@@ -49,6 +49,7 @@ runs:
         repository: shipwright-io/build
         ref: ${{ inputs.shipwright-ref }}
         path: src/build
+      if: github.event.pull_request.head.repo.full_name != github.repository
     - shell: bash
       run: |
         ${{ github.action_path }}/install-shipwright.sh 
@@ -59,6 +60,7 @@ runs:
         repository: shipwright-io/cli
         ref: ${{ inputs.cli-ref }}
         path: src/cli
+      if: github.event.pull_request.head.repo.full_name != github.repository
     - shell: bash
       run: |
         ${{ github.action_path }}/install-cli.sh
