@@ -1,6 +1,6 @@
 # Setup [Shipwright Build][shpBuild] and [CLI][shpCLI] (`v1`)
 
-[![Build][useActionBadgeSVG]](https://github.com/imjasonh/setup-ko/actions/workflows/use-action.yaml)
+[![Build][useActionBadgeSVG]][useAction]
 
 Deploys [Shipwright Build Controller][shpBuild], [CLI][shpCLI] and optionally a Container Registry instance, to perform continuous integration (CI) tests on the [`shipwright-io` projects][shpGitHubOrg].
 
@@ -55,16 +55,9 @@ The Shipwright components [Build Controller][shpBuild] and [CLI][shpCLI] can be 
 
 ## Inside Shipwright Organization
 
-When using this action inside the [shipwright-io organization][shpGitHubOrg], adjust the inputs accordingly with the [current context][ghaEnvVars]. For instance, the [Build Controller][shpBuild] repository shares the current commit digest with the action input:
+This action inspects the current context before checking out the [Build Controller][shpBuild] and the [CLI][shpCLI] repositories, so when it's being executed against forks or the actual repositories, the action uses the local data.
 
-```yml
-jobs:
-  use-action:
-    steps:
-      - uses: otaviof/setup-shipwright@v1
-        with:
-          shipwright-ref: ${{ env.GITHUB_SHA }}
-```
+In other words, this action only performs the remote repository checkout, and therefore can be employed on the [`shipwright-io` organization][shpGitHubOrg] and as well repository forks you're working on.
 
 # Contributing
 
@@ -97,7 +90,6 @@ kubectl --namespace=shipwright-build get pods
 kubectl --namespace=shipwright-build logs --follow shipwright-build-controller-xxxxxxx
 ```
 
-[ghaEnvVars]: https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
 [kind]: https://kind.sigs.k8s.io/
 [nektosAct]: https://github.com/nektos/act
 [shpBuild]: https://github.com/shipwright-io/build
